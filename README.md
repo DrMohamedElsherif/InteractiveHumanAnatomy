@@ -1,1 +1,1 @@
-
+This is an **interactive human anatomy** application designed to visually explore and teach all parts of the human body. Developed in Java, the application provides an intuitive interface for educational use, allowing users to navigate anatomical structures in detail. The project is currently under development and is expected to be completed by the end of August 2025.
