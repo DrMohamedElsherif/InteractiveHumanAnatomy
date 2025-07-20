@@ -1,28 +1,31 @@
-# AnatomyViewer — macOS Release v1.0
+# AnatomyViewer v1.0 — macOS Release
 
-We are excited to announce the first official macOS release of **AnatomyViewer**, a powerful and intuitive tool for interactive 3D anatomical visualization and hierarchical exploration.
+Welcome to the first official macOS release of **AnatomyViewer**, your tool for interactive 3D anatomical visualization with hierarchical exploration.
 
-## What’s Included
+## Overview
 
-- **Standalone macOS application** packaged as a native `.dmg` installer.
-- Bundled **custom Java runtime image** with essential JavaFX modules — no separate Java installation required.
-- Modern UI powered by JavaFX 24.0.1, featuring smooth 3D rendering and responsive controls.
-- Dual tree views for navigating ‘Is-A’ and ‘Part-Of’ anatomical relationships.
-- Rich search and AI-assisted query capabilities.
-- Native app icon and system integration for seamless macOS experience.
+- Native macOS `.dmg` installer with bundled custom Java runtime (no separate Java needed)
+- Smooth 3D rendering powered by JavaFX 24.0.1
+- Dual TreeViews for ‘Is-A’ and ‘Part-Of’ anatomy hierarchies
+- AI-assisted search and rich query support
+- Intuitive UI with native macOS integration and custom app icon
 
-## Installation Instructions
+## Installation
 
-1. Download the latest **AnatomyViewer-1.0.dmg** from the [GitHub Releases](https://github.com/DrMohamedElsherif/AnatomyViewer/releases) page.
-2. Open the `.dmg` file and drag the **AnatomyViewer** app to your **Applications** folder.
-3. Launch **AnatomyViewer** from Applications and begin exploring detailed anatomical structures with ease.
+1. Download the latest **AnatomyViewer-1.0.dmg** from the [GitHub Releases](https://github.com/DrMohamedElsherif/AnatomyViewer/releases).
+2. Open the `.dmg` and drag **AnatomyViewer** to your **Applications** folder.
+3. Launch and explore!
 
 ## System Requirements
 
-- macOS Mojave (10.14) or newer
-- 64-bit Intel processor or Apple Silicon (Rosetta 2 required for Intel builds)
-- Minimum 512 MB RAM recommended for smooth performance
+- macOS Mojave (10.14) or later
+- 64-bit Intel or Apple Silicon (Rosetta 2 needed for Intel builds)
+- Recommended: 512 MB RAM or more for optimal performance
 
 ## Feedback & Contributions
 
-Your feedback is invaluable! Please report issues or suggest features via the [GitHub Issues](https://github.com/DrMohamedElsherif/AnatomyViewer/issues) page. Contributions are welcome — see the repository for details on how to get involved.
+We welcome your feedback and contributions! Report issues or request features on [GitHub Issues](https://github.com/DrMohamedElsherif/AnatomyViewer/issues).
+
+---
+
+Thank you for using AnatomyViewer!
