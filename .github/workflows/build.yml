@@ -1,64 +1,80 @@
-name: Build and Package AnatomyViewer
+name: Build macOS DMG
 
 on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+  workflow_dispatch:
 
 jobs:
-  build:
-    strategy:
-      matrix:
-        os: [macos-latest, windows-latest]
-    runs-on: ${{ matrix.os }}
+  build-macos-dmg:
+    runs-on: macos-latest
+
+    env:
+      JAVA_VERSION: '24'
+      JAVAFX_VERSION: '24.0.2'
+      MAIN_CLASS: 'Project02.AnatomyViewer'
+      MAIN_JAR: 'Assignments-1.0-SNAPSHOT.jar'
+      APP_NAME: 'AnatomyViewer'
+      RUNTIME_DIR: 'anatomyviewer-build/custom-runtime'
+      RELEASE_DIR: 'release/macOS'
+      ICON_PATH: 'src/main/resources/anatomy_icon.icns'
+
     steps:
-    - uses: actions/checkout@v4
-    
-    - name: Set up JDK 21
-      uses: actions/setup-java@v3
-      with:
-        java-version: '21'
-        distribution: 'temurin'
-        cache: 'maven'
-    
-    - name: Build with Maven
-      run: mvn -B clean package --file pom.xml
-      
-    - name: Create DMG (macOS)
-      if: runner.os == 'macOS'
-      run: |
-        ${JAVA_HOME}/bin/jpackage \
-          --type dmg \
-          --name AnatomyViewer \
-          --input target \
-          --main-jar Assignments-1.0-SNAPSHOT.jar \
-          --main-class Project02.AnatomyViewer \
-          --dest target/dist \
-          --vendor "DrMohamedElsherif" \
-          --app-version 1.0 \
-          --icon src/main/resources/anatomy_icon.icns \
-          --mac-package-identifier com.example.anatomyviewer \
-          --mac-package-name AnatomyViewer
-    
-    - name: Create EXE (Windows)
-      if: runner.os == 'Windows'
-      run: |
-        ${JAVA_HOME}\bin\jpackage ^
-          --type msi ^
-          --name AnatomyViewer ^
-          --input target ^
-          --main-jar Assignments-1.0-SNAPSHOT.jar ^
-          --main-class Project02.AnatomyViewer ^
-          --dest target/dist ^
-          --vendor "DrMohamedElsherif" ^
-          --app-version 1.0 ^
-          --icon src/main/resources/anatomy_icon.ico ^
-          --win-menu ^
-          --win-shortcut
-    
-    - name: Upload Artifacts
-      uses: actions/upload-artifact@v3
-      with:
-        name: AnatomyViewer-${{ runner.os }}
-        path: target/dist/*
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: ☕ Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: ${{ env.JAVA_VERSION }}
+
+      - name: 💼 Set up Maven
+        uses: stCarolas/setup-maven@v4
+        with:
+          maven-version: 3.9.6
+
+      - name: 🔧 Build project with Maven
+        run: mvn clean package -DskipTests
+
+      - name: 📦 Download JavaFX SDK
+        run: |
+          curl -L -o javafx-sdk.zip https://download2.gluonhq.com/openjfx/${{ env.JAVAFX_VERSION }}/openjfx-${{ env.JAVAFX_VERSION }}_osx-x64_bin-sdk.zip
+          unzip javafx-sdk.zip
+          mv javafx-sdk-${{ env.JAVAFX_VERSION }} javafx-sdk
+
+      - name: 📦 Download JavaFX JMODS
+        run: |
+          curl -L -o javafx-jmods.zip https://download2.gluonhq.com/openjfx/${{ env.JAVAFX_VERSION }}/openjfx-${{ env.JAVAFX_VERSION }}_osx-x64_bin-jmods.zip
+          unzip javafx-jmods.zip
+          mv javafx-jmods-${{ env.JAVAFX_VERSION }} javafx-jmods
+
+      - name: 🔨 Create custom Java runtime image with jlink
+        run: |
+          $JAVA_HOME/bin/jlink \
+            --module-path "$JAVA_HOME/jmods:javafx-jmods" \
+            --add-modules java.base,javafx.controls,javafx.fxml,javafx.graphics,javafx.web \
+            --output ${{ env.RUNTIME_DIR }}
+
+      - name: 🧰 Package .dmg with jpackage
+        run: |
+          mkdir -p ${{ env.RELEASE_DIR }}
+          $JAVA_HOME/bin/jpackage \
+            --type dmg \
+            --name ${{ env.APP_NAME }} \
+            --input target \
+            --main-jar ${{ env.MAIN_JAR }} \
+            --main-class ${{ env.MAIN_CLASS }} \
+            --dest ${{ env.RELEASE_DIR }} \
+            --vendor "Mohamed Elsherif" \
+            --app-version 1.0 \
+            --icon ${{ env.ICON_PATH }} \
+            --mac-package-identifier com.example.anatomyviewer \
+            --mac-package-name ${{ env.APP_NAME }} \
+            --runtime-image ${{ env.RUNTIME_DIR }} \
+            --java-options "--enable-native-access=javafx.graphics -Dprism.verbose=true" \
+            --verbose
+
+      - name: 📤 Upload .dmg as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: AnatomyViewer-dmg
+          path: ${{ env.RELEASE_DIR }}/*.dmg
