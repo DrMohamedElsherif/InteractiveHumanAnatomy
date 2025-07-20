@@ -19,7 +19,7 @@ Welcome to the first official macOS release of **AnatomyViewer**, your tool for 
 <pre><code>curl -L -o AnatomyViewer.dmg https://github.com/DrMohamedElsherif/AnatomyViewer/releases/download/v1.0/AnatomyViewer-1.0<!-- -->.dmg </code></pre>
 
 # Mount and install manually, or:
-open AnatomyViewer.dmg
+<pre><code>open AnatomyViewer.dmg</code></pre>
 
 3. Open the `.dmg` and drag **AnatomyViewer** to your **Applications** folder.
 4. Launch and explore!
