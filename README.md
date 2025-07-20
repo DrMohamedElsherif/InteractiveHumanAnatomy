@@ -1,4 +1,4 @@
-# AnatomyViewer v1.0 — macOS Release
+# AnatomyViewer v1.0.0 — macOS Release
 
 Welcome to the first official macOS release of **AnatomyViewer**, your tool for interactive 3D anatomical visualization with hierarchical exploration.
 
