@@ -1,6 +1,6 @@
 # AnatomyViewer v1.0.0 — macOS Release
 
-Welcome to the first official macOS release of **AnatomyViewer**, your tool for interactive 3D anatomical visualization with hierarchical exploration.
+Welcome to the first official macOS release of **AnatomyViewer**, your tool for interactive 3D anatomical visualization with hierarchical exploration. This project was carried out as an individual solo project in the context of the [Advanced Java for Bioinformatics](https://uni-tuebingen.de/fakultaeten/mathematisch-naturwissenschaftliche-fakultaet/fachbereiche/informatik/lehrstuehle/algorithms-in-bioinformatics/teaching/winter-semester-20162017/advanced-java-for-bioinformatics/) course taught by [Prof. Dr. Daniel Huson](https://uni-tuebingen.de/fakultaeten/mathematisch-naturwissenschaftliche-fakultaet/fachbereiche/informatik/lehrstuehle/algorithms-in-bioinformatics/people/daniel-huson/) at the University of Tübingen.
 
 ## Overview
 
