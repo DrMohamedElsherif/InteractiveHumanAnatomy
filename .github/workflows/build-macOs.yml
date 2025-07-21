@@ -1,6 +1,9 @@
 name: Build macOS DMG
 
 on:
+  push:
+    branches:
+      - main
   workflow_dispatch:
 
 jobs:
@@ -13,48 +16,38 @@ jobs:
       MAIN_CLASS: 'Project02.AnatomyViewer'
       MAIN_JAR: 'Assignments-1.0-SNAPSHOT.jar'
       APP_NAME: 'AnatomyViewer'
-      RUNTIME_DIR: 'anatomyviewer-build/custom-runtime'
-      RELEASE_DIR: 'release/macOS'
-      ICON_PATH: 'src/main/resources/anatomy_icon.icns'
+      RUNTIME_DIR: ${{ github.workspace }}/anatomyviewer-build/custom-runtime
+      RELEASE_DIR: ${{ github.workspace }}/release/macOS
+      ICON_PATH: ${{ github.workspace }}/src/main/resources/anatomy_icon.icns
 
     steps:
-      - name: 📥 Checkout code
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: ☕ Set up Java
+      - name: Set up Java
         uses: actions/setup-java@v4
         with:
-          distribution: 'temurin'
+          distribution: temurin
           java-version: ${{ env.JAVA_VERSION }}
 
-      - name: 💼 Set up Maven
-        uses: stCarolas/setup-maven@v4
-        with:
-          maven-version: 3.9.6
-
-      - name: 🔧 Build project with Maven
+      - name: Build with Maven
         run: mvn clean package -DskipTests
 
-      - name: 📦 Download JavaFX SDK
-        run: |
-          curl -L -o javafx-sdk.zip https://download2.gluonhq.com/openjfx/${{ env.JAVAFX_VERSION }}/openjfx-${{ env.JAVAFX_VERSION }}_osx-x64_bin-sdk.zip
-          unzip javafx-sdk.zip
-          mv javafx-sdk-${{ env.JAVAFX_VERSION }} javafx-sdk
-
-      - name: 📦 Download JavaFX JMODS
+      - name: Download JavaFX JMODS
         run: |
           curl -L -o javafx-jmods.zip https://download2.gluonhq.com/openjfx/${{ env.JAVAFX_VERSION }}/openjfx-${{ env.JAVAFX_VERSION }}_osx-x64_bin-jmods.zip
           unzip javafx-jmods.zip
-          mv javafx-jmods-${{ env.JAVAFX_VERSION }} javafx-jmods
+          mv openjfx-${{ env.JAVAFX_VERSION }}_osx-x64_bin-jmods javafx-jmods
 
-      - name: 🔨 Create custom Java runtime image with jlink
+      - name: Create custom runtime with jlink
         run: |
           $JAVA_HOME/bin/jlink \
-            --module-path "$JAVA_HOME/jmods:javafx-jmods" \
+            --module-path "$JAVA_HOME/jmods:./javafx-jmods" \
             --add-modules java.base,javafx.controls,javafx.fxml,javafx.graphics,javafx.web \
-            --output ${{ env.RUNTIME_DIR }}
+            --output ${{ env.RUNTIME_DIR }} \
+            --strip-debug --compress=2 --no-header-files --no-man-pages
 
-      - name: 🧰 Package .dmg with jpackage
+      - name: Package with jpackage
         run: |
           mkdir -p ${{ env.RELEASE_DIR }}
           $JAVA_HOME/bin/jpackage \
@@ -73,7 +66,7 @@ jobs:
             --java-options "--enable-native-access=javafx.graphics -Dprism.verbose=true" \
             --verbose
 
-      - name: 📤 Upload .dmg as artifact
+      - name: Upload .dmg artifact
         uses: actions/upload-artifact@v4
         with:
           name: AnatomyViewer-dmg
